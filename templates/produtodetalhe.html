@@ -11,10 +11,10 @@
             <img src="{{ produto.image.url }}" alt="" class="img-fluid" width="380px">
         </div>
         <div class="col-md-6 text-left">
-            <h2>{{ produto.titulo }}({{ produto.visualizacao }} Vizualizado)</h2>
+            <h2>{{ produto.titulo }}( {{ produto.visualizacao }} Vizualizações )</h2>
             <h4>Categoria: {{ produto.categoria }}</h4>
             <h5>Preço: <strike>R$ {{ produto.preco_mercado }}</strike> R$ {{ produto.venda }}</h5>
-            <a href="" class="btn btn-success">Comprar</a><hr>
+            <a href="{% url 'lojaapp:addcarrinho' produto.id %}" class="btn btn-success">Comprar</a><hr>
             <p class="text-danger">Garantia: {{ produto.garantia }}</p>
             <p class="text-danger">Devolução: {{ produto.return_devolucao }}</p><hr>
             <p class="text-success">Descrição: {{ produto.descricao }}</p>
