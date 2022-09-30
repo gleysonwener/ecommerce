@@ -1,8 +1,9 @@
+import email
 from math import prod
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView
 from django.urls import reverse_lazy
-from . forms import Checar_Pedido_Form  
+from . forms import Checar_Pedido_Form, CadastrarClienteForm
 from . models import *
 
 class HomeView(TemplateView):
@@ -165,8 +166,26 @@ class CheckOutView(CreateView):
             form.instance.desconto = 0
             form.instance.total = carro_obj.total
             form.instance.pedido_status = "Pedido Recebido"
+            del self.request.session['carrinho_id']
         else:
             return redirect('lojaapp:home')
+        return super().form_valid(form)
+
+
+
+class RegistrarClienteView(CreateView):
+    template_name = 'registrarcliente.html'
+    form_class = CadastrarClienteForm
+    success_url = reverse_lazy('lojaapp:home')
+
+    #valida o formulário, limpa e armazena os dados requisitados na variável user
+    def form_valid(self, form):
+        usuario = form.cleaned_data.get('usuario')
+        senha = form.cleaned_data.get('senha')
+        email = form.cleaned_data.get('email')
+        user = User.objects.create_user(usuario, senha, email)
+        #instancia o usuario do formulário passando a variável user que foi criada por nós
+        form.instance.user = user 
         return super().form_valid(form)
 
 
