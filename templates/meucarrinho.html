@@ -36,7 +36,17 @@
                     <tr>
                         <th colspan="4" class="text-right">Total do Carrinho</th>
                         <th>R$ {{carrinho.total}}</th>
+                        {% if carrinho.carroproduto_set.all %}
+                            <th><a href="{% url 'lojaapp:limparcarrinho' %}" class="btn btn-warning">Limpar Carrinho</a></th>
+                        {% endif %}
                     </tr>
+                    {% if carrinho.carroproduto_set.all %}
+                    <tr>
+                        
+                            <th><a href="{% url 'lojaapp:checkout' %}" class="btn btn-info">Processar Compra</a></th>
+                       
+                    </tr>
+                    {% endif %}
                 </tbody>
             
             </thead>

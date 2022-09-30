@@ -95,11 +95,32 @@ class ManipularCarrinhoView(View):
             carro_obj.save()
 
         elif acao == 'dcr':
-            pass
+            cp_obj.quantidade -= 1
+            cp_obj.subtotal -= cp_obj.avaliacao
+            cp_obj.save()
+            carro_obj.total -= cp_obj.avaliacao
+            carro_obj.save()
+            if cp_obj.quantidade == 0:
+                cp_obj.delete()
+
         elif acao == 'rmv':
-            pass
+            carro_obj.total -= cp_obj.subtotal
+            carro_obj.save()
+            cp_obj.delete()
+            
         else:
             pass
+        return redirect('lojaapp:meucarrinho')
+
+
+class LimparCarrinhoView(View):
+    def get(self, request, *args, **kwargs):
+        carrinho_id = request.session.get('carrinho_id', None)
+        if carrinho_id:
+            carro = Carro.objects.get(id=carrinho_id)
+            carro.carroproduto_set.all().delete()
+            carro.total = 0
+            carro.save()
         return redirect('lojaapp:meucarrinho')
 
 
@@ -116,6 +137,10 @@ class MeuCarrinhoView(TemplateView):
         context['carrinho'] = carrinho
         return context
 
+
+
+class CheckOutView(TemplateView):
+    template_name = 'processar.html'
 
 class SobreView(TemplateView):
     template_name = 'sobre.html'

@@ -12,5 +12,7 @@ urlpatterns = [
     path('addcarrinho-<int:produto_id>/', AddCarrinhoView.as_view(), name='addcarrinho'),
     path('meucarrinho/', MeuCarrinhoView.as_view(), name='meucarrinho'),
     path('manipular-carrinho/<int:cp_id>/', ManipularCarrinhoView.as_view(), name='manipular-carrinho'),
+    path('limpar-carrinho/', LimparCarrinhoView.as_view(), name='limparcarrinho'),
+    path('checkout/', CheckOutView.as_view(), name='checkout'),
     
 ]
