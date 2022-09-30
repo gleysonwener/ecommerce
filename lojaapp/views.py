@@ -1,6 +1,8 @@
 from math import prod
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, CreateView
+from django.urls import reverse_lazy
+from . forms import Checar_Pedido_Form  
 from . models import *
 
 class HomeView(TemplateView):
@@ -139,8 +141,35 @@ class MeuCarrinhoView(TemplateView):
 
 
 
-class CheckOutView(TemplateView):
+class CheckOutView(CreateView):
     template_name = 'processar.html'
+    form_class = Checar_Pedido_Form
+    success_url = reverse_lazy('lojaapp:home')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        carrinho_id = self.request.session.get('carrinho_id', None)
+        if carrinho_id:
+            carrinho = Carro.objects.get(id=carrinho_id) 
+        else:
+            carrinho = None
+        context['carrinho'] = carrinho
+        return context
+
+
+    def form_valid(self, form):
+        carro_id = self.request.session.get('carrinho_id')
+        if carro_id:
+            carro_obj = Carro.objects.get(id=carro_id)
+            form.instance.carro = carro_obj
+            form.instance.subtotal = carro_obj.total
+            form.instance.desconto = 0
+            form.instance.total = carro_obj.total
+            form.instance.pedido_status = "Pedido Recebido"
+        else:
+            return redirect('lojaapp:home')
+        return super().form_valid(form)
+
+
 
 class SobreView(TemplateView):
     template_name = 'sobre.html'
