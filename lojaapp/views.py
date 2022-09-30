@@ -1,6 +1,6 @@
 from math import prod
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, View
 from . models import *
 
 class HomeView(TemplateView):
@@ -43,10 +43,78 @@ class AddCarrinhoView(TemplateView):
         #se existir o carrinho, senão vai criar o carrinho
         if carrinho_id:
             carrinho_obj = Carro.objects.get(id=carrinho_id) 
+            produto_no_carro = carrinho_obj.carroproduto_set.filter(produto=produto_obj)
+            if produto_no_carro.exists():
+                carroproduto = produto_no_carro.last()
+                carroproduto.quantidade += 1
+                carroproduto.subtotal += produto_obj.venda
+                carroproduto.save()
+                carrinho_obj.total += produto_obj.venda
+                carrinho_obj.save()
+
+            else:
+                carroproduto = CarroProduto.objects.create(
+                    carro = carrinho_obj,
+                    produto = produto_obj,
+                    avaliacao = produto_obj.venda,
+                    quantidade = 1,
+                    subtotal = produto_obj.venda,
+                )
+                carrinho_obj.total += produto_obj.venda
+                carrinho_obj.save()
+
         else:
             carrinho_obj = Carro.objects.create(total=0)
             #adciona o produto a sessão do carrinho, se ele não estiver criado
             self.request.session['carrinho_id'] = carrinho_obj.id
+            carroproduto = CarroProduto.objects.create(
+                    carro = carrinho_obj,
+                    produto = produto_obj,
+                    avaliacao = produto_obj.venda,
+                    quantidade = 1,
+                    subtotal = produto_obj.venda,
+                )
+            carrinho_obj.total += produto_obj.venda
+            carrinho_obj.save()
+
+        return context
+
+
+class ManipularCarrinhoView(View):
+    def get(self, request, *args, **kwargs):
+        cp_id = self.kwargs['cp_id']
+        acao = request.GET.get('acao')
+        cp_obj = CarroProduto.objects.get(id=cp_id)
+        carro_obj = cp_obj.carro
+      
+        if acao == 'inc':
+            cp_obj.quantidade += 1
+            cp_obj.subtotal += cp_obj.avaliacao
+            cp_obj.save()
+            carro_obj.total += cp_obj.avaliacao
+            carro_obj.save()
+
+        elif acao == 'dcr':
+            pass
+        elif acao == 'rmv':
+            pass
+        else:
+            pass
+        return redirect('lojaapp:meucarrinho')
+
+
+
+class MeuCarrinhoView(TemplateView):
+    template_name = 'meucarrinho.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        carrinho_id = self.request.session.get('carrinho_id', None)
+        if carrinho_id:
+            carrinho = Carro.objects.get(id=carrinho_id) 
+        else:
+            carrinho = None
+        context['carrinho'] = carrinho
+        return context
 
 
 class SobreView(TemplateView):

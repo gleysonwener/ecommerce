@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <a href="{% url 'lojaapp:home' %}">HOME</a> |
-    <a href="{% url 'lojaapp:sobre' %}">SOBRE</a>  |
-    <a href="{% url 'lojaapp:contato' %}">CONTATO</a>  |
-    <a href="{% url 'lojaapp:todos-produtos' %}">CATEGORIAS</a>
+    <div class="container mt-3">
+        <a href="{% url 'lojaapp:home' %}">HOME</a> |
+        <a href="{% url 'lojaapp:sobre' %}">SOBRE</a>  |
+        <a href="{% url 'lojaapp:contato' %}">CONTATO</a>  |
+        <a href="{% url 'lojaapp:todos-produtos' %}">CATEGORIAS</a>  |
+        <a href="{% url 'lojaapp:meucarrinho' %}">CARRINHO</a>
+    </div>
     <hr>
     
     {% block content %}
