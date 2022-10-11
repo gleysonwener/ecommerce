@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Cadastrar novo cliente{% endblock title %}
+{% block title %}Entrar{% endblock title %}
 
 
 {% block content %}
@@ -13,10 +13,12 @@
 
             {{ form.as_p }}
 
-            <button class="btn btn-success">Cadastrar Cliente</button>
-
+            <button class="btn btn-success">Entrar</button>
+            {% if error %}
+                <li>{{ error }}</li>
+            {% endif %}
         </form>
-        <p>Jaé cadastrado? <a href="{% url 'lojaapp:clienteentrar' %}">Faça o login!</a></p>
+        <p>Não possui cadastro? <a href="{% url 'lojaapp:registrarcliente' %}">Clique aqui!</a></p>
     </div>
    </div>
 </div>

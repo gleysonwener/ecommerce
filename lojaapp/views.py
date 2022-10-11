@@ -1,10 +1,13 @@
 import email
 from math import prod
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View, CreateView
+from django.views.generic import TemplateView, View, CreateView, FormView
 from django.urls import reverse_lazy
-from . forms import Checar_Pedido_Form, CadastrarClienteForm
+from . forms import Checar_PedidoForm, ClienteRegistrarForm, ClienteEntrarForm
 from . models import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+
 
 class HomeView(TemplateView):
     template_name = 'home.html'
@@ -144,7 +147,7 @@ class MeuCarrinhoView(TemplateView):
 
 class CheckOutView(CreateView):
     template_name = 'processar.html'
-    form_class = Checar_Pedido_Form
+    form_class = Checar_PedidoForm
     success_url = reverse_lazy('lojaapp:home')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -175,17 +178,41 @@ class CheckOutView(CreateView):
 
 class RegistrarClienteView(CreateView):
     template_name = 'registrarcliente.html'
-    form_class = CadastrarClienteForm
+    form_class = ClienteRegistrarForm
     success_url = reverse_lazy('lojaapp:home')
 
     #valida o formulário, limpa e armazena os dados requisitados na variável user
     def form_valid(self, form):
-        usuario = form.cleaned_data.get('usuario')
-        senha = form.cleaned_data.get('senha')
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
         email = form.cleaned_data.get('email')
-        user = User.objects.create_user(usuario, senha, email)
+        user = User.objects.create_user(username, password, email)
         #instancia o usuario do formulário passando a variável user que foi criada por nós
         form.instance.user = user 
+        login(self.request, user)
+        return super().form_valid(form)
+
+
+class ClienteSairView(View):
+    def pegar(self, request):
+        logout(request)
+        return redirect('lojaapp:home')
+    
+
+
+class ClienteEntrarView(FormView):
+    template_name = 'clienteentrar.html'
+    form_class = ClienteEntrarForm
+    success_url = reverse_lazy('lojaapp:home')
+
+    def form_valid(self, form):
+        unome = form.cleaned_data.get('username')
+        upassword = form.cleaned_data.get('upassword')
+        usr = authenticate(username=unome, password=upassword)
+        if usr is not None and usr.cliente:
+            login(self.request, usr)
+        else:
+            return render(self.request, self.template_name, {"form": self.form_class, "error": "Usuário ou senha não correspondem"})
         return super().form_valid(form)
 
 
