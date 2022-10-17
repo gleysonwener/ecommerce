@@ -1,0 +1,37 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="15">
+            <item index="0" class="java.lang.String" itemvalue="Pillow" />
+            <item index="1" class="java.lang.String" itemvalue="Django" />
+            <item index="2" class="java.lang.String" itemvalue="certifi" />
+            <item index="3" class="java.lang.String" itemvalue="asgiref" />
+            <item index="4" class="java.lang.String" itemvalue="pytz" />
+            <item index="5" class="java.lang.String" itemvalue="djangorestframework" />
+            <item index="6" class="java.lang.String" itemvalue="sqlparse" />
+            <item index="7" class="java.lang.String" itemvalue="beautifulsoup4" />
+            <item index="8" class="java.lang.String" itemvalue="soupsieve" />
+            <item index="9" class="java.lang.String" itemvalue="django-bootstrap4" />
+            <item index="10" class="java.lang.String" itemvalue="django-requests" />
+            <item index="11" class="java.lang.String" itemvalue="greenlet" />
+            <item index="12" class="java.lang.String" itemvalue="djangorestframework-simplejwt" />
+            <item index="13" class="java.lang.String" itemvalue="psycopg2" />
+            <item index="14" class="java.lang.String" itemvalue="psycopg2-binary" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="decouple.config" />
+          <option value="gestao_clientes.gestao_clientes.urls.clientes" />
+          <option value="gestao_clientes.gestao_clientes.urls.home" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

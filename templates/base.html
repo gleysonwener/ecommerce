@@ -16,6 +16,7 @@
         <a href="{% url 'lojaapp:meucarrinho' %}">CARRINHO</a>  |
         {% if request.user.cliente %}
             Seja bem vindo {{ request.user.username }} !
+            <a href="{% url 'lojaapp:clienteperfil' %}">meu perfil</a>  |
             <a href="{% url 'lojaapp:clientesair' %}">SAIR</a>  
         {% else %}
             <a href="{% url 'lojaapp:registrarcliente' %}">CADASTRAR CLIENTE</a> |

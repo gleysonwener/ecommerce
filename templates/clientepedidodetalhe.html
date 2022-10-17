@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Detalhe do Pedido{% endblock title %}
+
+
+{% block content %}
+
+<div class="container">
+   <div class="row">
+    <div class="col-md-8 mx-auto">
+        <h3>Detalhes do Pedido do Cliente:</h3>
+        <hr>
+        <p><span class="font-weight-bold"></span><samp>Pedido ID:   </samp><samp>{{pedido_obj.pk}}</p></samp>
+        <p><span class="font-weight-bold"></span><samp>Status do Pedido:   </samp><samp>{{pedido_obj.pedido_status}}</p></samp>
+        <p><span class="font-weight-bold"></span><samp>Data do Pedido:   </samp><samp>{{pedido_obj.criado_em}}</p></samp>
+        <p><span class="font-weight-bold"></span><samp>Informação do Cliente:   </samp><samp>{{pedido_obj.ordenado_por}}</p></samp>
+        <p><span class="font-weight-bold"></span><samp>Telefone:   </samp><samp>{{pedido_obj.telefone}}</p></samp>
+        <p><span class="font-weight-bold"></span><samp>E-mail:   </samp><samp>{{pedido_obj.email}}</p></samp>
+        
+       
+    <hr>   
+    </div>
+    <h3>Itens do Pedido:</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Item</th>
+                <th>Avaliação</th>
+                <th>Quantidade</th>
+                <th>Sub Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cp in pedido_obj.carro.carroproduto_set.all %}
+                <tr>
+                    <!-- <td>{{forloop.counter}}</td> -->
+                    <td>{{cp.titulo}}{{cp.id}}</td>
+                    <td>{{cp.avaliacao}}</td>
+                    <td>{{cp.quantidade}}</td>
+                    <td>{{cp.subtotal}}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="4" class="text-right">Valor Total:</th>
+                <th>R$ {{pedido_obj.total}}</th>
+            </tr>
+        </tbody>
+    </table>
+
+   </div>
+</div>
+    
+{% endblock content %}

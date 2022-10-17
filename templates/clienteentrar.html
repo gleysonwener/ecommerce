@@ -7,7 +7,7 @@
 <div class="container">
    <div class="row">
     <div class="col-md-6 mx-auto">
-        <h3>Cadastrar clientes</h3>
+        <h3>Entrar</h3>
         <form action="" method="post">
             {% csrf_token %}
 
@@ -18,7 +18,7 @@
                 <li>{{ error }}</li>
             {% endif %}
         </form>
-        <p>Não possui cadastro? <a href="{% url 'lojaapp:registrarcliente' %}">Clique aqui!</a></p>
+        <p>Não possui cadastro? <a href="{% url 'lojaapp:registrarcliente' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif  %}">Clique aqui!</a></p>
     </div>
    </div>
 </div>

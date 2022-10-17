@@ -14,8 +14,12 @@ urlpatterns = [
     path('manipular-carrinho/<int:cp_id>/', ManipularCarrinhoView.as_view(), name='manipular-carrinho'),
     path('limpar-carrinho/', LimparCarrinhoView.as_view(), name='limparcarrinho'),
     path('checkout/', CheckOutView.as_view(), name='checkout'),
-    path('registrar-cliente/', RegistrarClienteView.as_view(), name='registrarcliente'),
-    path('sair/', ClienteSairView.as_view(), name='clientesair'),
+    path('registrar-cliente/', ClienteRegistrarView.as_view(), name='registrarcliente'),
+    #path('sair/', ClienteSairView.as_view(), name='clientesair'),
+    path('sair/', usuario_logout, name='clientesair'),
     path('entrar/', ClienteEntrarView.as_view(), name='clienteentrar'),
-    
+    # path('perfil/', ClientePerfilView.as_view(), name='clienteperfil'),
+    path('perfil/pedido-<int:pk>/', ClientePedidoDetalhe.as_view(), name='clientepedidodetalhe'),
+    path('perfil/', perfilcliente, name='clienteperfil'),
+
 ]
