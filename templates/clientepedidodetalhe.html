@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% block title %}Detalhe do Pedido{% endblock title %}
 
 
@@ -33,8 +34,8 @@
         <tbody>
             {% for cp in pedido_obj.carro.carroproduto_set.all %}
                 <tr>
-                    <!-- <td>{{forloop.counter}}</td> -->
-                    <td>{{cp.titulo}}{{cp.id}}</td>
+                    <td>{{forloop.counter}}</td>
+                    <td><a target="blank" href="{% url 'lojaapp:produto-detalhe' cp.produto.slug %}">{{cp.produto.titulo}}{{cp.id}}</a></td>
                     <td>{{cp.avaliacao}}</td>
                     <td>{{cp.quantidade}}</td>
                     <td>{{cp.subtotal}}</td>
@@ -42,7 +43,7 @@
             {% endfor %}
             <tr>
                 <th colspan="4" class="text-right">Valor Total:</th>
-                <th>R$ {{pedido_obj.total}}</th>
+                <th>R$ {{pedido_obj.total|intcomma}}</th>
             </tr>
         </tbody>
     </table>

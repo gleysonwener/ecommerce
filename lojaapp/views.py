@@ -16,6 +16,7 @@ class LojaMixin(object):
                 carro_obj.save()
         return super().dispatch(request, *args, **kwargs)
 
+
 class HomeView(LojaMixin, TemplateView):
     template_name = 'home.html'
     def get_context_data(self, **kwargs):
@@ -263,47 +264,42 @@ class ContatoView(LojaMixin, TemplateView):
 
 
 
-# class ClientePerfilView(TemplateView):
-#     template_name = 'clienteperfil.html'
-#     def dispatch(self, request, *args, **kwargs):
-#         if request.user.is_authenticated and request.user.cliente:
-#             pass
-#         else:
-#             return redirect('/entrar/?next=/perfil/')
-#         return super().dispatch(request, *args, **kwargs)
+class ClientePerfilView(TemplateView):
+    template_name = "clienteperfil.html"
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.cliente:
+            pass
+        else:
+            return redirect('/entrar/?next=/perfil/')
+        return super().dispatch(request, *args, **kwargs)
 
 
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         
-#         cliente = self.request.user.cliente
-#         context['cliente'] = cliente
+        cliente = self.request.user.cliente
+        context['cliente'] = cliente
 
-#         # pedidos = Pedido_order.objects.filter(carro__cliente=cliente)
-#         pedidos = Pedido_order.objects.all()
-#         context['pedidos'] = pedidos
+        pedidos = Pedido_order.objects.filter(carro__cliente=cliente).order_by("-id")
+        # pedidos = Pedido_order.objects.all()
+        context['pedidos'] = pedidos
 
-#         return context
+        return context
 
 
-def perfilcliente(request):
-    template_name = 'clienteperfil.html'
-    pedidos = Pedido_order.objects.all()
 
-    context = {
-        'pedidos': pedidos,
-    }
-
-    return render( request, template_name, context)
 
 class ClientePedidoDetalhe(DetailView):
     template_name = 'clientepedidodetalhe.html'
     model = Pedido_order
-    context_objet_name = 'pedido_obj'
+    context_object_name = 'pedido_obj'
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.cliente:
-            pass
+            order_id = self.kwargs["pk"]
+            pedido = Pedido_order.objects.get(id=order_id)
+            if request.user.cliente != pedido.carro.cliente:
+                return redirect('lojaapp:clienteperfil')
         else:
             return redirect('/entrar/?next=/perfil/')
         return super().dispatch(request, *args, **kwargs)

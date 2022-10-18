@@ -30,11 +30,11 @@
                 </tr>
             </thead>
             <tbody>
+                
                 {% for pedidos in pedidos %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                            
-
+                   
+                    <td>{{ forloop.count }}</td>
                     <td><a href="{% url 'lojaapp:clientepedidodetalhe' pedidos.pk %}">{{ pedidos.id }}</td></a>
                     <td>{{ pedidos.total }}</td>
                     <td>{{ pedidos.criado_em }}</td>

@@ -66,9 +66,7 @@ PEDIDO_STATUS = (
 
 class Pedido_order(models.Model):
     carro = models.OneToOneField(Carro, on_delete=models.CASCADE)
-
     ordenado_por = models.CharField(max_length=200)
-
     endereco_envio = models.CharField(max_length=200)
     telefone = models.CharField(max_length=10)
     email = models.EmailField(null=True, blank=True)

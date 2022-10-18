@@ -1,4 +1,3 @@
-from tkinter import Widget
 from django import forms
 from . models import Pedido_order, Cliente
 from django.forms import ModelForm, PasswordInput, TextInput, EmailInput
