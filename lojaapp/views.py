@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, FormView, DetailView, ListView
 from django.urls import reverse_lazy
@@ -239,7 +240,7 @@ class ClienteEntrarView(FormView):
         unome = form.cleaned_data.get('username')
         pword = form.cleaned_data.get('password')
         usr = authenticate(username=unome, password=pword)
-        if usr is not None and usr.cliente:
+        if usr is not None and Cliente.objects.filter(user=usr).exists():
             login(self.request, usr)
         else:
             return render(self.request, self.template_name, {"form": self.form_class, "error": "Usuário ou senha não correspondem"})
@@ -267,7 +268,7 @@ class ContatoView(LojaMixin, TemplateView):
 class ClientePerfilView(TemplateView):
     template_name = "clienteperfil.html"
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.cliente:
+        if request.user.is_authenticated and Cliente.objects.filter(user=request.user).exists():
             pass
         else:
             return redirect('/entrar/?next=/perfil/')
@@ -295,7 +296,7 @@ class ClientePedidoDetalhe(DetailView):
     context_object_name = 'pedido_obj'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.cliente:
+        if request.user.is_authenticated and Cliente.objects.filter(user=request.user).exists():
             order_id = self.kwargs["pk"]
             pedido = Pedido_order.objects.get(id=order_id)
             if request.user.cliente != pedido.carro.cliente:
@@ -303,3 +304,39 @@ class ClientePedidoDetalhe(DetailView):
         else:
             return redirect('/entrar/?next=/perfil/')
         return super().dispatch(request, *args, **kwargs)
+
+
+#classe do administrador
+
+
+class AdminLoginView(FormView):
+    template_name = 'admin_paginas/adminlogin.html'
+    form_class = ClienteEntrarForm
+    success_url = reverse_lazy('lojaapp:adminhome')
+
+    def form_valid(self, form):
+        unome = form.cleaned_data.get('username')
+        pword = form.cleaned_data.get('password')
+        usr = authenticate(username=unome, password=pword)
+        if usr is not None and Admin.objects.filter(user=usr).exists():
+            login(self.request, usr)
+        else:
+            return render(self.request, self.template_name, {"form": self.form_class, "error": "Usuário ou senha não correspondem"})
+        return super().form_valid(form)
+
+class AdminHomeView(TemplateView):
+    template_name = 'admin_paginas/adminhome.html'
+
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Admin.objects.filter(user=request.user).exists():
+            pass
+        else:
+            return redirect('/admin-login/')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['PedidosPendentes'] = Pedido_order.objects.filter(pedido_status='Pedido Recebido')
+        return context

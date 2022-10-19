@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Administrador{% endblock title %}
+
+
+{% block content %}
+
+<div class="container">
+   <div class="row">
+    <div class="col-md-6 mx-auto">
+        <h3>Formulário de Administrador</h3>
+        <form action="" method="post">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button class="btn btn-success">Entrar</button>
+            {% if error %}
+                <li>{{ error }}</li>
+            {% endif %}
+        </form>
+        <p>Não possui cadastro? <a href="{% url 'lojaapp:registrarcliente' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif  %}">Clique aqui!</a></p>
+    </div>
+   </div>
+</div>
+    
+{% endblock content %}

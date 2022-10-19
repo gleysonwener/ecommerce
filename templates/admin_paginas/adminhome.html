@@ -1,0 +1,38 @@
+{% extends 'admin_paginas/adminbase.html' %}
+{% block title %}Administrador Home{% endblock title %}
+
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Pedidos Pendentes</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>DataPedido</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in PedidosPendentes %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            
+                            <td><a href="">#Pedido: {{ pedido.id }}</a></td>
+                            <td>{{ pedido.ordenado_por }}</td>
+                            <td>{{ pedido.criado_em }}</td>
+                            <td>{{ pedido.total }}</td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

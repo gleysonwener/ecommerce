@@ -15,10 +15,12 @@ urlpatterns = [
     path('limpar-carrinho/', LimparCarrinhoView.as_view(), name='limparcarrinho'),
     path('checkout/', CheckOutView.as_view(), name='checkout'),
     path('registrar-cliente/', ClienteRegistrarView.as_view(), name='registrarcliente'),
-    #path('sair/', ClienteSairView.as_view(), name='clientesair'),
     path('sair/', usuario_logout, name='clientesair'),
     path('entrar/', ClienteEntrarView.as_view(), name='clienteentrar'),
     path('perfil/', ClientePerfilView.as_view(), name='clienteperfil'),
     path('perfil/pedido-<int:pk>/', ClientePedidoDetalhe.as_view(), name='clientepedidodetalhe'),
+    path('admin-login/', AdminLoginView.as_view(), name='adminlogin'),
+    path('admin-home/', AdminHomeView.as_view(), name='adminhome'),
+    
 
 ]   

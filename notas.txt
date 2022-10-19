@@ -1,0 +1,4 @@
+usuario
+lojaadmin@
+senha
+@123456admin
