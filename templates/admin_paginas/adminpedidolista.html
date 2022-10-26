@@ -1,13 +1,14 @@
 {% extends 'admin_paginas/adminbase.html' %}
-{% block title %}Administrador Home{% endblock title %}
-
+{% block title %}Todos os Pdidos{% endblock title %}
 
 
 {% block content %}
+
 <div class="container">
+       
     <div class="row">
         <div class="col-md-12">
-            <h2>Pedidos Pendentes</h2>
+            <h3>Todo o Pedidos</h3>
             <table class="table">
                 <thead>
                     <tr>
@@ -16,10 +17,11 @@
                         <th>Cliente</th>
                         <th>DataPedido</th>
                         <th>Valor</th>
+                        <th>Status Produto</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for pedido in PedidosPendentes %}
+                    {% for pedido in todospedido %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             
@@ -27,6 +29,7 @@
                             <td>{{ pedido.ordenado_por }}</td>
                             <td>{{ pedido.criado_em }}</td>
                             <td>{{ pedido.total }}</td>
+                            <td>{{ pedido.pedido_status }}</td>
 
                         </tr>
                     {% endfor %}
@@ -34,5 +37,7 @@
             </table>
         </div>
     </div>
+
 </div>
+    
 {% endblock content %}

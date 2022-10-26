@@ -1,0 +1,59 @@
+{% extends 'admin_paginas/adminbase.html' %}
+{% load humanize %}
+{% block title %}Detalhes do Pedido{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h3>Detalhes do Pedido do Cliente:</h3>
+            <hr>
+            <p><span class="font-weight-bold"></span><samp>Pedido ID:   </samp><samp>{{pedido_obj.pk}}</p></samp>
+            <p><span class="font-weight-bold"></span><samp>Status do Pedido:   </samp><samp>{{pedido_obj.pedido_status}}</p></samp>
+            <p><span class="font-weight-bold"></span><samp>Data do Pedido:   </samp><samp>{{pedido_obj.criado_em}}</p></samp>
+            <p><span class="font-weight-bold"></span><samp>Informação do Cliente:   </samp><samp>{{pedido_obj.ordenado_por}}</p></samp>
+            <p><span class="font-weight-bold"></span><samp>Telefone:   </samp><samp>{{pedido_obj.telefone}}</p></samp>
+            <p><span class="font-weight-bold"></span><samp>E-mail:   </samp><samp>{{pedido_obj.email}}</p></samp>
+            <hr>   
+        
+            <h3>Itens do Pedido:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Item</th>
+                        <th>Avaliação</th>
+                        <th>Quantidade</th>
+                        <th>Sub Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cp in pedido_obj.carro.carroproduto_set.all %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td><a target="blank" href="{% url 'lojaapp:produto-detalhe' cp.produto.slug %}">{{cp.produto.titulo}}{{cp.id}}</a></td>
+                            <td>{{cp.avaliacao}}</td>
+                            <td>{{cp.quantidade}}</td>
+                            <td>{{cp.subtotal}}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <th colspan="4" class="text-right">Valor Total:</th>
+                        <th>R$ {{pedido_obj.total|intcomma}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <form action="{% url 'lojaapp:adminpedidomudarstatus' pedido_obj.id %}" method="post">
+                {% csrf_token %}
+                <select name="status" >
+                    {% for  i, j in todosstatus %}
+                    <option value="{{i}}"{% if i == pedido_obj.pedido_status %}selected{% endif %}>{{j}}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-success">Alterar Status</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -324,10 +324,8 @@ class AdminLoginView(FormView):
             return render(self.request, self.template_name, {"form": self.form_class, "error": "Usuário ou senha não correspondem"})
         return super().form_valid(form)
 
-class AdminHomeView(TemplateView):
-    template_name = 'admin_paginas/adminhome.html'
 
-
+class AdminRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Admin.objects.filter(user=request.user).exists():
             pass
@@ -335,8 +333,46 @@ class AdminHomeView(TemplateView):
             return redirect('/admin-login/')
         return super().dispatch(request, *args, **kwargs)
 
+
+
+class AdminHomeView(AdminRequiredMixin, TemplateView):
+    template_name = 'admin_paginas/adminhome.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['PedidosPendentes'] = Pedido_order.objects.filter(pedido_status='Pedido Recebido')
+        context['PedidosPendentes'] = Pedido_order.objects.filter(pedido_status='Pedido Recebido').order_by("-id")
         return context
+
+
+class AdminPedidoDetaheView(AdminRequiredMixin, DetailView):
+    template_name = 'admin_paginas/adminpedidodetahe.html'
+    model = Pedido_order
+    context_object_name = 'pedido_obj'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['todosstatus'] = PEDIDO_STATUS
+        
+        return context
+
+    
+
+ 
+class AdminPedidoListaView(AdminRequiredMixin, ListView):
+    template_name = 'admin_paginas/adminpedidolista.html'
+    queryset = Pedido_order.objects.all().order_by("-id")
+    context_object_name = 'todospedido'      
+
+
+ 
+class AdminPedidoMudarStatusView(AdminRequiredMixin, View):
+     
+    def post(self, request, *args, **kwargs):
+        pedido_id = self.kwargs["pk"]
+        pedido_obj = Pedido_order.objects.get(id=pedido_id)
+        return redirect(reverse_lazy('lojaapp:adminpedidodetalhe', kwargs={"pk" : self.kwargs["pk"]}))
+
+
+
+

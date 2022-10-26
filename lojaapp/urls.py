@@ -21,6 +21,7 @@ urlpatterns = [
     path('perfil/pedido-<int:pk>/', ClientePedidoDetalhe.as_view(), name='clientepedidodetalhe'),
     path('admin-login/', AdminLoginView.as_view(), name='adminlogin'),
     path('admin-home/', AdminHomeView.as_view(), name='adminhome'),
-    
-
+    path('admin-pedido/<int:pk>/', AdminPedidoDetaheView.as_view(), name='adminpedidodetalhe'),    
+    path('admin-todos-pedidos/', AdminPedidoListaView.as_view(), name='adminpedidolista'),    
+    path('admin-pedido-<int:pk>-mudar/', AdminPedidoMudarStatusView.as_view(), name='adminpedidomudarstatus'),
 ]   
