@@ -14,6 +14,7 @@ urlpatterns = [
     path('manipular-carrinho/<int:cp_id>/', ManipularCarrinhoView.as_view(), name='manipular-carrinho'),
     path('limpar-carrinho/', LimparCarrinhoView.as_view(), name='limparcarrinho'),
     path('checkout/', CheckOutView.as_view(), name='checkout'),
+    path('pagamento/', PagamentoView.as_view(), name='pagamento'),
     path('registrar-cliente/', ClienteRegistrarView.as_view(), name='registrarcliente'),
     path('sair/', usuario_logout, name='clientesair'),
     path('entrar/', ClienteEntrarView.as_view(), name='clienteentrar'),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('admin-pedido/<int:pk>/', AdminPedidoDetaheView.as_view(), name='adminpedidodetalhe'),    
     path('admin-todos-pedidos/', AdminPedidoListaView.as_view(), name='adminpedidolista'),    
     path('admin-pedido-<int:pk>-mudar/', AdminPedidoMudarStatusView.as_view(), name='adminpedidomudarstatus'),
+    path('pesquisar/', PesquisarView.as_view(), name='pesquisar'),
 ]   

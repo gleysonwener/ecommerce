@@ -6,6 +6,9 @@ from . forms import Checar_PedidoForm, ClienteRegistrarForm, ClienteEntrarForm
 from . models import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
+from django.core.paginator import Paginator
+
 
 class LojaMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -22,7 +25,12 @@ class HomeView(LojaMixin, TemplateView):
     template_name = 'home.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['produto_list'] = Produto.objects.all().order_by('-id')
+        #context['produto_list'] = Produto.objects.all().order_by('-id')
+        all_produtos = Produto.objects.all().order_by('-id')
+        paginator = Paginator(all_produtos, 4)
+        page_number = self.request.GET.get('page')
+        produto_list = paginator.get_page(page_number)
+        context['produto_list'] = produto_list
         return context
 
 
@@ -192,6 +200,16 @@ class CheckOutView(LojaMixin, CreateView):
         else:
             return redirect('lojaapp:home')
         return super().form_valid(form)
+
+
+
+class PagamentoView(View):
+   
+   def get(self, request, *args, **kwargs):
+    context = {
+
+    }
+    return render(request, 'pagamento.html', context)
 
 
 
@@ -371,8 +389,20 @@ class AdminPedidoMudarStatusView(AdminRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         pedido_id = self.kwargs["pk"]
         pedido_obj = Pedido_order.objects.get(id=pedido_id)
+        novo_status = request.POST.get('status')
+        pedido_obj.pedido_status = novo_status
+        pedido_obj.save()
+
         return redirect(reverse_lazy('lojaapp:adminpedidodetalhe', kwargs={"pk" : self.kwargs["pk"]}))
 
 
-
+class PesquisarView(TemplateView):
+    template_name = 'pesquisar.html'
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        kw = self.request.GET.get('keyword')
+        result = Produto.objects.filter(
+            Q(titulo__icontains=kw) | Q(descricao__icontains=kw) | Q(return_devolucao__icontains=kw))
+        context['result'] = result
+        return context
 
